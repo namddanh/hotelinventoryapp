@@ -1,12 +1,17 @@
-{{ room | json }}
+{{ roomsForm.pristine | json }}
+{{ roomsForm.dirty | json }}
+{{ roomsForm.valid | json }}
+{{ roomsForm.invalid | json }}
+{{ roomsForm.value | json }}
 
-<div class="alert alert-success">
+<div *ngIf="successMessage !== ''" class="alert alert-success">
   {{ successMessage }}
 </div>
 
-<form (ngSubmit)="AddRoom()">
+<form #roomsForm="ngForm" (ngSubmit)="AddRoom(roomsForm)">
   <div class="form-group">
     <input
+      required
       class="form-control"
       type="text"
       name="roomType"
@@ -16,6 +21,10 @@
   </div>
   <div class="form-group">
     <input
+      #roomamenities="ngModel"
+      required
+      minlength="5"
+      maxlength="20"
       class="form-control"
       type="text"
       name="amenities"
@@ -23,8 +32,15 @@
       placeholder="Amenities"
     />
   </div>
+  <div class="alert alert-danger" *ngIf="roomamenities.errors?.['minlength']">
+    Amenities should be 5 characters minimum!
+  </div>
+  <div *ngIf="roomamenities.dirty && roomamenities.errors?.['required']">
+    Please provide the amenities!
+  </div>
   <div class="form-group">
     <input
+      required
       class="form-control"
       type="Number"
       name="price"
@@ -34,6 +50,7 @@
   </div>
   <div class="form-group">
     <input
+      required
       class="form-control"
       type="text"
       name="photos"
@@ -43,6 +60,7 @@
   </div>
   <div>
     <input
+      required
       class="form-control"
       type="datetime"
       name="checkinTime"
@@ -52,6 +70,7 @@
   </div>
   <div class="form-group">
     <input
+      required
       class="form-control"
       type="datetime"
       name="checkoutTime"
@@ -61,6 +80,9 @@
   </div>
   <div class="form-group">
     <input
+      min="1"
+      max="5"
+      required
       class="form-control"
       type="number"
       name="rating"
@@ -69,7 +91,13 @@
     />
   </div>
   <div>
-    <button class="btn btn-primary" type="submit">Submit</button>
+    <button
+      [disabled]="roomsForm.invalid"
+      class="btn btn-primary"
+      type="submit"
+    >
+      Submit
+    </button>
   </div>
 </form>
 
